@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- TAGS DE SEO -->
+    <title>Calculador de Jornada</title>
+    <meta name="description" content="Calculadora gratuita de jornada de trabalho para escritórios de contabilidade e empresas. Simule adequações de horários para redução de carga horária (40h e 42h) de forma rápida e precisa.">
+    <meta name="keywords" content="calculadora de jornada, redução de jornada 40h, jornada 42h semanais, CLT, horas trabalhadas, departamento pessoal, contabilidade, ajuste de horário">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="Lucas Santos">
+
+    <!-- OPEN GRAPH -->
+    <meta property="og:title" content="Calculador de Jornada de Trabalho | Ferramenta Gratuita">
+    <meta property="og:description" content="Simule a adequação de horários de trabalho para metas de 40h e 42h semanais de forma automatizada.">
+    <meta property="og:type" content="website">
+
+    <!-- GOOGLE ADSENSE -->
+    <!-- <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-XXXXXXXXXXXXXXXX" crossorigin="anonymous"></script> -->
+
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style>
+        body { background-color: #ffffff; }
+        .border-blue-custom { border-color: #0c8ce9; }
+        .bg-dark-blue { background-color: #0c3f6e; }
+        .text-dark-blue { color: #0c3f6e; }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between text-gray-800">
+
+    <!-- HEADER -->
+    <header class="bg-dark-blue text-white py-4 shadow-none">
+        <div class="container mx-auto px-4 text-center">
+            <h1 class="text-xl md:text-2xl font-bold tracking-wide">Calculadora de Jornada</h1>
+        </div>
+    </header>
+
+    <!-- ESPAÇO ADSENSE 1: TOPO (Leaderboard) -->
+    <div class="container mx-auto px-4 my-4 max-w-4xl text-center">
+        <div class="bg-gray-100 border border-dashed border-gray-300 py-3 text-xs text-gray-400 rounded">
+            <!-- tag do bloco do Google AdSense (Topo) -->
+            <span>Anúncio / Publicidade</span>
+        </div>
+    </div>
+
+    <!-- CONTEÚDO PRINCIPAL -->
+    <main class="container mx-auto px-4 py-4 max-w-4xl flex-grow">
+        
+        <!-- INTRODUÇÃO -->
+        <div class="text-center mb-8">
+            <h2 class="text-2xl font-bold text-dark-blue mb-2">Simule a Nova Jornada de Trabalho (40h e 42h)</h2>
+            <p class="text-gray-600 text-sm md:text-base">Ferramenta gratuita voltada para escritórios de contabilidade, profissionais de DP e empresas.</p>
+        </div>
+
+        <!-- ABAS DE NAVEGAÇÃO DO FORMULÁRIO -->
+        <div class="flex justify-center mb-6 border-b border-gray-200">
+            <button onclick="mudarModo('geral')" id="btn-geral" class="px-6 py-2 font-medium text-sm border-b-2 border-[#0c8ce9] text-[#0c8ce9] focus:outline-none transition-colors">Modo Padrão (Geral)</button>
+            <button onclick="mudarModo('detalhado')" id="btn-detalhado" class="px-6 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 focus:outline-none transition-colors">Modo Detalhado (Por Dias)</button>
+        </div>
+
+        <!-- FORMULÁRIO CONTAINER -->
+        <div class="border border-blue-custom rounded p-6 mb-8 bg-white">
+            
+            <!-- OPÇÃO 1: MODO GERAL -->
+            <div id="form-geral" class="space-y-4">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Entrada</label>
+                        <input type="time" id="g-entrada" value="07:30" class="w-full border border-blue-custom rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#0c8ce9]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Saída Almoço</label>
+                        <input type="time" id="g-saida-almoco" value="12:00" class="w-full border border-blue-custom rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#0c8ce9]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Volta Almoço</label>
+                        <input type="time" id="g-volta-almoco" value="13:00" class="w-full border border-blue-custom rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#0c8ce9]">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Saída (Largada)</label>
+                        <input type="time" id="g-saida" value="17:18" class="w-full border border-blue-custom rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#0c8ce9]">
+                    </div>
+                </div>
+
+                <div class="pt-2">
+                    <label class="block text-xs font-semibold uppercase text-gray-600 mb-1">Dias trabalhados atualmente por semana:</label>
+                    <select id="g-dias" class="w-full md:w-1/3 border border-blue-custom rounded px-3 py-2 text-sm focus:outline-none focus:ring-1 focus:ring-[#0c8ce9]">
+                        <option value="5">5 dias por semana (Segunda a Sexta)</option>
+                        <option value="6">6 dias por semana (Segunda a Sábado)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- OPÇÃO 2: MODO DETALHADO -->
+            <div id="form-detalhado" class="hidden space-y-4">
+                <p class="text-xs text-gray-500 mb-2">Configure jornadas diferenciadas por blocos de dias na semana.</p>
+                
+                <!-- Bloco 1 -->
+                <div class="p-3 border border-gray-200 rounded bg-gray-50 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Qtd Dias (Bloco 1)</label>
+                        <select id="d1-dias" onchange="atualizarDiasBloco()" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                            <option value="5">5 dias</option>
+                            <option value="4" selected>4 dias</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Entrada</label>
+                        <input type="time" id="d1-entrada" value="07:30" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Saída Almoço</label>
+                        <input type="time" id="d1-saida-almoco" value="12:00" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Volta Almoço</label>
+                        <input type="time" id="d1-volta-almoco" value="13:00" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Saída</label>
+                        <input type="time" id="d1-saida" value="17:30" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                </div>
+
+                <!-- Bloco 2 -->
+                <div class="p-3 border border-gray-200 rounded bg-gray-50 grid grid-cols-1 md:grid-cols-5 gap-3 items-end">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Qtd Dias (Bloco 2)</label>
+                        <select id="d2-dias" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm bg-white">
+                            <option value="1" selected>1 dia</option>
+                            <option value="2">2 dias</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Entrada</label>
+                        <input type="time" id="d2-entrada" value="07:30" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Saída Almoço</label>
+                        <input type="time" id="d2-saida-almoco" value="12:00" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Volta Almoço</label>
+                        <input type="time" id="d2-volta-almoco" value="13:00" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-600 mb-1">Saída</label>
+                        <input type="time" id="d2-saida" value="16:30" class="w-full border border-blue-custom rounded px-2 py-1.5 text-sm">
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÃO CALCULAR -->
+            <div class="mt-6 text-center">
+                <button onclick="calcularJornada()" class="bg-[#0c8ce9] hover:bg-[#086fc2] text-white font-medium px-8 py-2.5 rounded text-sm transition-colors cursor-pointer w-full md:w-auto">
+                    Calcular Opções de Redução
+                </button>
+            </div>
+        </div>
+
+        <!-- ESPAÇO ADSENSE 2: MEIO DA PÁGINA -->
+        <div class="my-6 text-center">
+            <div class="bg-gray-100 border border-dashed border-gray-300 py-3 text-xs text-gray-400 rounded">
+                <!-- tag do bloco do Google AdSense (Meio/In-Feed) -->
+                <span>Anúncio / Publicidade</span>
+            </div>
+        </div>
+
+        <!-- ÁREA DE RESULTADOS -->
+        <div id="resultados" class="hidden space-y-6">
+            
+            <!-- Resumo Atual -->
+            <div class="border border-blue-custom rounded p-4 bg-gray-50 text-center text-sm">
+                <span class="font-semibold text-gray-700">Situação Atual: </span>
+                <span id="resumo-atual-texto" class="text-dark-blue font-bold"></span>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                
+                <!-- META 40 HORAS -->
+                <div class="border border-blue-custom rounded p-5 bg-white">
+                    <h3 class="font-bold text-dark-blue text-base border-b pb-2 mb-3 flex justify-between items-center">
+                        <span>Meta: 40h Semanais</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Total: 40h / semana</span>
+                    </h3>
+                    <div id="opcoes-40h" class="space-y-4 text-sm">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+
+                <!-- META 42 HORAS -->
+                <div class="border border-blue-custom rounded p-5 bg-white">
+                    <h3 class="font-bold text-dark-blue text-base border-b pb-2 mb-3 flex justify-between items-center">
+                        <span>Meta: 42h Semanais</span>
+                        <span class="text-xs bg-blue-100 text-blue-800 px-2 py-0.5 rounded">Total: 42h / semana</span>
+                    </h3>
+                    <div id="opcoes-42h" class="space-y-4 text-sm">
+                        <!-- Preenchido via JS -->
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- CONTEÚDO EDUCACIONAL PARA SEO (Crucial para Aprovação no AdSense e Ranks do Google) -->
+        <article class="mt-16 border-t border-gray-200 pt-8 text-gray-700 space-y-6 text-sm">
+            <h2 class="text-xl font-bold text-dark-blue">Como Funciona a Redução de Carga Horária (40h e 42h)?</h2>
+            
+            <p>Com as frequentes discussões legislativas e acordos coletivos voltados para a modernização das relações de trabalho no Brasil, muitas empresas e escritórios de contabilidade precisam readequar a jornada semanal de seus colaboradores — migrando do limite padrão da CLT (44 horas semanais) para regimes de <strong>42 horas</strong> ou <strong>40 horas semanais</strong>.</p>
+
+            <h3 class="text-base font-bold text-dark-blue">Principais Formas de Ajustar a Escala de Trabalho</h3>
+            <ul class="list-disc pl-5 space-y-2">
+                <li><strong>Ajuste no Horário de Entrada:</strong> Permite que o funcionário inicie as atividades mais tarde, mantendo os horários de intervalo e término da jornada.</li>
+                <li><strong>Ajuste no Horário de Saída (Largada):</strong> Antecipa o término da jornada diária, sendo uma das opções preferidas em regimes de 5 dias na semana.</li>
+                <li><strong>Ampliação do Intervalo Intrajornada (Almoço):</strong> Mantém o horário de chegada e saída, estendendo o tempo reservado para refeição e descanso.</li>
+            </ul>
+
+            <h3 class="text-base font-bold text-dark-blue">Importância para o Departamento Pessoal e RH</h3>
+            <p>Manter a precisão nos minutos trabalhados evita passivos trabalhistas decorrentes de horas extras não computadas ou descumprimento de acordos coletivos. Nossa ferramenta foi desenvolvida para calcular instantaneamente essas compensações, permitindo simulações padronizadas ou detalhadas por blocos de dias da semana.</p>
+        </article>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="border-t border-gray-200 py-6 text-center text-xs text-gray-500 mt-12 bg-gray-50">
+        <div class="container mx-auto px-4 space-y-3">
+            <p>Desenvolvido por <a href="https://www.linkedin.com/in/lucasantos-tch/" target="_blank" class="text-[#0c8ce9] hover:underline font-medium">Lucas Santos</a>. Todos os direitos reservados.</p>
+            <p>Parceria - <a href="https://www.instagram.com/mazcontabil?utm_source=ig_web_button_share_sheet&cplk=ZDNlZDc0MzIxNw==" target="_blank" class="text-[#0c8ce9] hover:underline font-medium">Maz Contábil</a>.</p>
+            <div class="space-x-4">
+                <a href="#politica" onclick="alert('Esta ferramenta não armazena dados de navegação ou dados pessoais informados. Os cálculos são processados localmente no seu navegador.')" class="hover:underline text-gray-600">Política de Privacidade</a>
+                <span>|</span>
+                <a href="#termos" onclick="alert('O Calculador de Jornada é uma ferramenta gratuita de uso informativo. Recomenda-se sempre validar as alterações de jornada com o setor jurídico/contábil responsável.')" class="hover:underline text-gray-600">Termos de Uso</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- SCRIPT DE CÁLCULO E INTERAÇÃO -->
+    <script>
+        let modoAtual = 'geral';
+
+        function mudarModo(modo) {
+            modoAtual = modo;
+            const btnGeral = document.getElementById('btn-geral');
+            const btnDetalhado = document.getElementById('btn-detalhado');
+            const formGeral = document.getElementById('form-geral');
+            const formDetalhado = document.getElementById('form-detalhado');
+            
+            // Oculta e limpa os resultados ao trocar de aba
+            const resultadosDiv = document.getElementById('resultados');
+            resultadosDiv.classList.add('hidden');
+            document.getElementById('opcoes-40h').innerHTML = '';
+            document.getElementById('opcoes-42h').innerHTML = '';
+
+            if (modo === 'geral') {
+                btnGeral.className = "px-6 py-2 font-medium text-sm border-b-2 border-[#0c8ce9] text-[#0c8ce9] focus:outline-none transition-colors";
+                btnDetalhado.className = "px-6 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 focus:outline-none transition-colors";
+                formGeral.classList.remove('hidden');
+                formDetalhado.classList.add('hidden');
+            } else {
+                btnDetalhado.className = "px-6 py-2 font-medium text-sm border-b-2 border-[#0c8ce9] text-[#0c8ce9] focus:outline-none transition-colors";
+                btnGeral.className = "px-6 py-2 font-medium text-sm border-b-2 border-transparent text-gray-500 hover:text-gray-700 focus:outline-none transition-colors";
+                formDetalhado.classList.remove('hidden');
+                formGeral.classList.add('hidden');
+            }
+        }
+
+        function atualizarDiasBloco() {
+            const d1Dias = parseInt(document.getElementById('d1-dias').value);
+            const d2Select = document.getElementById('d2-dias');
+
+            if (d1Dias === 5) {
+                d2Select.innerHTML = `<option value="1" selected>1 dia</option>`;
+                d2Select.disabled = true;
+                d2Select.className = "w-full border border-blue-custom rounded px-2 py-1.5 text-sm bg-gray-100";
+            } else if (d1Dias === 4) {
+                d2Select.innerHTML = `
+                    <option value="1" selected>1 dia</option>
+                    <option value="2">2 dias</option>
+                `;
+                d2Select.disabled = false;
+                d2Select.className = "w-full border border-blue-custom rounded px-2 py-1.5 text-sm bg-white";
+            }
+        }
+
+        function timeToMinutes(timeStr) {
+            if (!timeStr) return 0;
+            const [h, m] = timeStr.split(':').map(Number);
+            return h * 60 + m;
+        }
+
+        function minutesToTime(totalMinutes) {
+            totalMinutes = Math.round(totalMinutes);
+            totalMinutes = (totalMinutes % (24 * 60) + (24 * 60)) % (24 * 60);
+            const h = Math.floor(totalMinutes / 60);
+            const m = totalMinutes % 60;
+            return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+        }
+
+        function calcularJornada() {
+            let cargaSemanalAtual = 0;
+            let totalDias = 0;
+            let dadosCalculo = {};
+
+            if (modoAtual === 'geral') {
+                const entrada = document.getElementById('g-entrada').value;
+                const saidaAlmoco = document.getElementById('g-saida-almoco').value;
+                const voltaAlmoco = document.getElementById('g-volta-almoco').value;
+                const saida = document.getElementById('g-saida').value;
+                const diasSemana = parseInt(document.getElementById('g-dias').value);
+
+                const minsDiarios = (timeToMinutes(saidaAlmoco) - timeToMinutes(entrada)) + (timeToMinutes(saida) - timeToMinutes(voltaAlmoco));
+                cargaSemanalAtual = minsDiarios * diasSemana;
+                totalDias = diasSemana;
+
+                dadosCalculo = {
+                    tipo: 'geral',
+                    entrada, saidaAlmoco, voltaAlmoco, saida, dias: diasSemana
+                };
+            } else {
+                const d1Dias = parseInt(document.getElementById('d1-dias').value);
+                const d1Entrada = document.getElementById('d1-entrada').value;
+                const d1SaidaAlmoco = document.getElementById('d1-saida-almoco').value;
+                const d1VoltaAlmoco = document.getElementById('d1-volta-almoco').value;
+                const d1Saida = document.getElementById('d1-saida').value;
+
+                const d1Mins = (timeToMinutes(d1SaidaAlmoco) - timeToMinutes(d1Entrada)) + (timeToMinutes(d1Saida) - timeToMinutes(d1VoltaAlmoco));
+
+                const d2Dias = parseInt(document.getElementById('d2-dias').value);
+                const d2Entrada = document.getElementById('d2-entrada').value;
+                const d2SaidaAlmoco = document.getElementById('d2-saida-almoco').value;
+                const d2VoltaAlmoco = document.getElementById('d2-volta-almoco').value;
+                const d2Saida = document.getElementById('d2-saida').value;
+
+                const d2Mins = (timeToMinutes(d2SaidaAlmoco) - timeToMinutes(d2Entrada)) + (timeToMinutes(d2Saida) - timeToMinutes(d2VoltaAlmoco));
+
+                cargaSemanalAtual = (d1Mins * d1Dias) + (d2Mins * d2Dias);
+                totalDias = d1Dias + d2Dias;
+
+                dadosCalculo = {
+                    tipo: 'detalhado',
+                    d1: { dias: d1Dias, entrada: d1Entrada, saidaAlmoco: d1SaidaAlmoco, voltaAlmoco: d1VoltaAlmoco, saida: d1Saida, mins: d1Mins },
+                    d2: { dias: d2Dias, entrada: d2Entrada, saidaAlmoco: d2SaidaAlmoco, voltaAlmoco: d2VoltaAlmoco, saida: d2Saida, mins: d2Mins }
+                };
+            }
+
+            const cargaHorasStr = `${Math.floor(cargaSemanalAtual / 60)}h ${cargaSemanalAtual % 60}m`;
+            document.getElementById('resumo-atual-texto').innerText = `Carga Semanal Atual: ${cargaHorasStr} (${totalDias} dias trabalhados)`;
+
+            // Metas semanais: 40h = 2400 minutos | 42h = 2520 minutos
+            renderizarResultadosMeta(cargaSemanalAtual, 2400, 'opcoes-40h', dadosCalculo);
+            renderizarResultadosMeta(cargaSemanalAtual, 2520, 'opcoes-42h', dadosCalculo);
+
+            document.getElementById('resultados').classList.remove('hidden');
+        }
+
+        function renderizarResultadosMeta(cargaAtual, cargaMeta, containerId, dados) {
+            const container = document.getElementById(containerId);
+            const diferencaTotalMinutos = cargaAtual - cargaMeta; // Quanto precisa eliminar no total da semana
+
+            if (diferencaTotalMinutos <= 0) {
+                container.innerHTML = `<p class="text-gray-500 italic">A carga horária atual já está dentro ou abaixo desta meta.</p>`;
+                return;
+            }
+
+            if (dados.tipo === 'geral') {
+                const reducaoDiaria = Math.round(diferencaTotalMinutos / dados.dias);
+                const novaEntrada = minutesToTime(timeToMinutes(dados.entrada) + reducaoDiaria);
+                const novaSaida = minutesToTime(timeToMinutes(dados.saida) - reducaoDiaria);
+                const novaVolta = minutesToTime(timeToMinutes(dados.voltaAlmoco) + reducaoDiaria);
+                const novoAlmocoMin = (timeToMinutes(dados.voltaAlmoco) - timeToMinutes(dados.saidaAlmoco)) + reducaoDiaria;
+                const novoAlmocoStr = `${Math.floor(novoAlmocoMin / 60)}h ${novoAlmocoMin % 60}m`;
+
+                container.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="p-3 bg-gray-50 rounded border border-gray-100">
+                            <p class="font-semibold text-gray-700 text-xs uppercase mb-1">Opção 1: Ajustar na Entrada</p>
+                            <p class="text-gray-600">Entrar mais tarde às <strong class="text-dark-blue">${novaEntrada}</strong></p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded border border-gray-100">
+                            <p class="font-semibold text-gray-700 text-xs uppercase mb-1">Opção 2: Ajustar na Saída</p>
+                            <p class="text-gray-600">Sair mais cedo às <strong class="text-dark-blue">${novaSaida}</strong></p>
+                        </div>
+                        <div class="p-3 bg-gray-50 rounded border border-gray-100">
+                            <p class="font-semibold text-gray-700 text-xs uppercase mb-1">Opção 3: Ajustar no Almoço</p>
+                            <p class="text-gray-600">Aumentar intervalo para <strong class="text-dark-blue">${novoAlmocoStr}</strong> (Volta às ${novaVolta})</p>
+                        </div>
+                    </div>
+                `;
+            } else {
+                // Abordagem A: Redução aplicada APENAS no Bloco 1
+                const redD1 = Math.round(diferencaTotalMinutos / dados.d1.dias);
+                const d1EntradaNova = minutesToTime(timeToMinutes(dados.d1.entrada) + redD1);
+                const d1SaidaNova = minutesToTime(timeToMinutes(dados.d1.saida) - redD1);
+                const d1VoltaAlmocoNova = minutesToTime(timeToMinutes(dados.d1.voltaAlmoco) + redD1);
+                const d1AlmocoNovoMin = (timeToMinutes(dados.d1.voltaAlmoco) - timeToMinutes(dados.d1.saidaAlmoco)) + redD1;
+                const d1AlmocoNovoStr = `${Math.floor(d1AlmocoNovoMin / 60)}h ${d1AlmocoNovoMin % 60}m`;
+
+                // Abordagem B: Redução distribuída entre Bloco 1 e Bloco 2
+                const totalDias = dados.d1.dias + dados.d2.dias;
+                const redDistribuida = Math.round(diferencaTotalMinutos / totalDias);
+                const distEntradaNova = minutesToTime(timeToMinutes(dados.d1.entrada) + redDistribuida);
+                const distSaidaNova = minutesToTime(timeToMinutes(dados.d1.saida) - redDistribuida);
+                const distVoltaNova = minutesToTime(timeToMinutes(dados.d1.voltaAlmoco) + redDistribuida);
+                const distAlmocoMin = (timeToMinutes(dados.d1.voltaAlmoco) - timeToMinutes(dados.d1.saidaAlmoco)) + redDistribuida;
+                const distAlmocoStr = `${Math.floor(distAlmocoMin / 60)}h ${distAlmocoMin % 60}m`;
+
+                const distEntradaD2 = minutesToTime(timeToMinutes(dados.d2.entrada) + redDistribuida);
+                const distSaidaD2 = minutesToTime(timeToMinutes(dados.d2.saida) - redDistribuida);
+                const distVoltaD2 = minutesToTime(timeToMinutes(dados.d2.voltaAlmoco) + redDistribuida);
+                const distAlmocoMinD2 = (timeToMinutes(dados.d2.voltaAlmoco) - timeToMinutes(dados.d2.saidaAlmoco)) + redDistribuida;
+                const distAlmocoStrD2 = `${Math.floor(distAlmocoMinD2 / 60)}h ${distAlmocoMinD2 % 60}m`;
+
+                container.innerHTML = `
+                    <div class="space-y-4">
+                        <!-- GRUPO 1: Ajuste apenas no Bloco 1 -->
+                        <div class="border-b pb-3">
+                            <p class="text-xs font-bold text-dark-blue uppercase mb-2">Cenário A: Ajustar apenas no Bloco 1 (${dados.d1.dias} dias) | Bloco 2 inalterado</p>
+                            <div class="space-y-2 text-xs text-gray-600">
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">1. Entrada mais tarde:</span> Entrar às <strong class="text-dark-blue">${d1EntradaNova}</strong> no Bloco 1 (Bloco 2 mantém o mesmo horário).
+                                </div>
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">2. Saída mais cedo:</span> Sair às <strong class="text-dark-blue">${d1SaidaNova}</strong> no Bloco 1 (Bloco 2 mantém o mesmo horário).
+                                </div>
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">3. Aumentar Almoço:</span> Almoço de <strong class="text-dark-blue">${d1AlmocoNovoStr}</strong> no Bloco 1 (Bloco 2 mantém o mesmo horário).
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GRUPO 2: Ajuste distribuído nos dois blocos -->
+                        <div>
+                            <p class="text-xs font-bold text-dark-blue uppercase mb-2">Cenário B: Distribuir a redução em toda a semana (${totalDias} dias)</p>
+                            <div class="space-y-2 text-xs text-gray-600">
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">1. Entrada mais tarde:</span> Bloco 1 às <strong class="text-dark-blue">${distEntradaNova}</strong> | Bloco 2 às <strong class="text-dark-blue">${distEntradaD2}</strong>.
+                                </div>
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">2. Saída mais cedo:</span> Bloco 1 às <strong class="text-dark-blue">${distSaidaNova}</strong> | Bloco 2 às <strong class="text-dark-blue">${distSaidaD2}</strong>.
+                                </div>
+                                <div class="p-2 bg-gray-50 rounded border">
+                                    <span class="font-semibold text-gray-700">3. Aumentar Almoço:</span> Bloco 1 para <strong class="text-dark-blue">${distAlmocoStr}</strong> | Bloco 2 para <strong class="text-dark-blue">${distAlmocoStrD2}</strong>.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
